@@ -8,16 +8,13 @@ import axios from "axios";
 export default function SignInScreen({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
+    setErrorMessage("");
     if (email && password) {
-      if (errorMessage !== null) {
-        setErrorMessage(null);
-      }
-
       try {
         const response = await axios.post(
           `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in`,
@@ -26,24 +23,15 @@ export default function SignInScreen({ setToken }) {
             password,
           }
         );
-
-        if (response.data.token && response.data.id) {
-          const token = response.data.token;
-          const id = response.data.id;
+        if (response.data.token) {
           setToken(token);
-          setId(id);
-        } else {
-          setErrorMessage("An error occurred");
+          alert("Inscription réussie");
         }
       } catch (error) {
-        if (error.response.status === 401) {
-          setErrorMessage("Incorrect credentials");
-        } else {
-          setErrorMessage("An error occurred");
-        }
+        setErrorMessage("Your email doesn't exist!");
       }
     } else {
-      setErrorMessage("Please fill all fields");
+      setErrorMessage("Please fill the field");
     }
   };
 
@@ -69,7 +57,6 @@ export default function SignInScreen({ setToken }) {
         {/* BUTTON SIGN IN */}
       <View style={styles.align2}>
         <View style={styles.border}>
-        <Message message={errorMessage} color="error" />
         <Text style={styles.button}
           onPress={async () => {
             const userToken = "secret-token";
