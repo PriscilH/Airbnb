@@ -1,9 +1,11 @@
-import { Button, Text, TextInput, View, Image, StyleSheet, ScrollView } from "react-native";
+import { Button, Text, TextInput, View, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import Logo from "../assets/airbnb-icon.png"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
+import { useNavigation } from "@react-navigation/core";
 
 export default function SignUpScreen({ setToken }) {
+  const navigation = useNavigation();
+
   return (
     <ScrollView style={styles.container}>
 
@@ -23,16 +25,27 @@ export default function SignUpScreen({ setToken }) {
       </View> 
       </KeyboardAwareScrollView> 
 
-      <View>
-        <Button
-          title="Sign up"
+      {/* BUTTON SIGN UP */}
+
+      <View style={styles.align2}>
+        <View style={styles.border}>
+        <Text style={styles.button}
           onPress={async () => {
             const userToken = "secret-token";
             setToken(userToken);
-          }}
-        />
+          }}>Sign up</Text>
+        </View> 
       </View>
         
+      <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("SignIn");
+          }}
+        >
+          <View style={styles.align2}>
+           <Text style={styles.subsentence}>Already have an account ? Sign in</Text> 
+          </View>
+      </TouchableOpacity>
       
     </ScrollView>
   );
@@ -46,12 +59,12 @@ const styles = StyleSheet.create({
   logo:{
     width: 90,
     height: 90,
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 15,
+    marginBottom: 15,
   },
   align:{
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   sign:{
     fontSize: 25,
@@ -61,7 +74,7 @@ const styles = StyleSheet.create({
   block:{
     marginLeft: 35,
     marginRight: 35,
-    marginBottom: 80,
+    marginBottom: 30,
   },
   input:{
     borderBottomWidth: 1,
@@ -80,6 +93,32 @@ const styles = StyleSheet.create({
     borderRightColor: '#EB5A62',
     marginBottom: 30,
     paddingBottom: 5,
-    height: 80, textAlignVertical: 'top',
+    height: 80, 
+    textAlignVertical: 'top',
+  },
+  button:{
+    backgroundColor: 'white',
+    color: '#717171',
+    fontWeight: "bold",
+  },
+  border:{
+    alignItems: "center",
+    height: 50,
+    borderWidth: 2,
+    borderColor: '#EB5A62',
+    marginBottom: 10,
+    width: 200,
+    fontWeight: "bold",
+    padding: 5,
+    justifyContent: "center",
+    borderRadius: 50,
+  },
+  align2:{
+    alignItems: "center",
+  },
+  subsentence:{
+    color: '#717171',
+    fontWeight: "bold",
+    marginBottom: 12,
   },
 });
