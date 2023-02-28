@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     color: '#717171',
     fontWeight: "bold",
+    
   },
   border:{
     alignItems: "center",
@@ -135,5 +136,5 @@ const styles = StyleSheet.create({
   subsentence:{
     color: '#717171',
     fontWeight: "bold",
-  }
+  },
 });
