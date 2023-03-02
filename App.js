@@ -21,8 +21,10 @@ export default function App() {
   const setToken = async (token) => {
     if (token) {
       await AsyncStorage.setItem("userToken", token);
+      setUserToken(token);
     } else {
       await AsyncStorage.removeItem("userToken");
+      setUserToken(null);
     }
 
     setUserToken(token);
@@ -37,6 +39,7 @@ export default function App() {
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
       setUserToken(userToken);
+
       setIsLoading(false);
     };
 
@@ -95,7 +98,7 @@ export default function App() {
                           headerTitleStyle: { color: "white" },
                         }}
                       >
-                        {/* {(props) => <HomeScreen {...props} setToken={setToken}/>} */}
+                         {() => <HomeScreen setToken={setToken}/>} 
                       </Stack.Screen>
 
                       <Stack.Screen

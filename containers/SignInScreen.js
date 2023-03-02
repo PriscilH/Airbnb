@@ -11,7 +11,7 @@ export default function SignInScreen({ setToken, navigation }) {
 
 
   const handleSubmit = async () => {
-    // setErrorMessage("");
+    setErrorMessage("");
     if (email && password) {
       try {
         const {data} = await axios.post(
@@ -21,9 +21,9 @@ export default function SignInScreen({ setToken, navigation }) {
             password,
           }
         );
-        // const token = response.data.token;
-        //   setToken(token);
-        console.log("response>>", data);
+        const token = data.token;
+        setToken(token);
+        // console.log("response>>", data);
           alert("Connexion réussie");
           
       } catch (error) {

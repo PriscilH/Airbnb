@@ -22,6 +22,7 @@ export default function SignUpScreen({ setToken, navigation }) {
             { email, username, description, password }
           );
 
+          
           console.log("response>>", data);
           alert(data.token);
         } catch (error) {
