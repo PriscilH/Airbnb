@@ -1,34 +1,31 @@
-import { useNavigation } from "@react-navigation/core";
 import { Text, TextInput, View, Image, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import Logo from "../assets/airbnb-icon.png";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useState } from "react";
 import axios from "axios";
 
-export default function SignInScreen({ setToken }) {
+export default function SignInScreen({ setToken, navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const navigation = useNavigation();
 
   const handleSubmit = async () => {
-    setErrorMessage("");
+    // setErrorMessage("");
     if (email && password) {
       try {
-        const response = await axios.post(
+        const {data} = await axios.post(
           `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in`,
           {
             email,
             password,
           }
         );
-        if (response.data.token) {
-          setToken(token);
-          alert("Inscription réussie");
-        }
+        
+        console.log("response>>", data);
+          alert("Connexion réussie");
       } catch (error) {
-        setErrorMessage("Your email doesn't exist!");
+        setErrorMessage("Your email or password doesn't exist!");
       }
     } else {
       setErrorMessage("Please fill the field");
@@ -38,6 +35,7 @@ export default function SignInScreen({ setToken }) {
 
   return (
     <ScrollView style={styles.container}>
+
       <View style={styles.align}>
       <Image source={Logo} style={styles.logo}/>
       <Text style={styles.sign}>Sign in</Text>
@@ -47,23 +45,33 @@ export default function SignInScreen({ setToken }) {
       <KeyboardAwareScrollView>
         <View style={styles.block} >
           {/* <Text>Name: </Text> */}
-        <View style={styles.input}><TextInput placeholder="Email" setFunction={setEmail} /></View>
+        <View style={styles.input}><TextInput placeholder="Email" onChangeText={(text) => {
+          // réinitialisation du message d'erreur dès que l'utilisateur change la valeur de l'input
+          setErrorMessage("");
+          setEmail(text);
+        }} /></View>
         {/* <Text>Password: </Text> */}
-        <View style={styles.input}><TextInput placeholder="Password" setFunction={setPassword} secureTextEntry={true} /></View>
+        <View style={styles.input}><TextInput placeholder="Password"  secureTextEntry={true}
+        onChangeText={(text) => {
+          setErrorMessage("");
+          setPassword(text);
+        }} />
+        
         </View>
+        </View>
+        {/* Affichage du message d'erreur */}
+      {errorMessage  && <View style={styles.error}><Text style={styles.red} >{errorMessage}</Text></View>}
         </KeyboardAwareScrollView>
 
 
         {/* BUTTON SIGN IN */}
-      <View style={styles.align2}>
+      <TouchableOpacity style={styles.align2}>
         <View style={styles.border}>
         <Text style={styles.button}
-          onPress={async () => {
-            const userToken = "secret-token";
-            setToken(userToken);
-          }}>Sign in</Text>
+          onPress={handleSubmit}
+          >Sign in</Text>
         </View> 
-      </View>
+      </TouchableOpacity>
        
         
         <TouchableOpacity
@@ -135,6 +143,14 @@ const styles = StyleSheet.create({
   },
   subsentence:{
     color: '#717171',
+    fontWeight: "bold",
+  },
+  error:{
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  red:{
+    color: '#EB5A62',
     fontWeight: "bold",
   },
 });

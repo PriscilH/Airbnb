@@ -1,7 +1,6 @@
 import { Text, TextInput, View, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import Logo from "../assets/airbnb-icon.png"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useNavigation } from "@react-navigation/core";
 import { useState } from "react";
 import axios from "axios";
 
@@ -27,7 +26,7 @@ export default function SignUpScreen({ setToken, navigation }) {
           alert(data.token);
         } catch (error) {
           console.log("catch>>", error.response.data);
-          setErrorMessage("An error occured, this email already exist !");
+          setErrorMessage("Error, this email or username already exist !");
         }
       } else {
         setErrorMessage("Passwords must be the same");
@@ -71,7 +70,7 @@ export default function SignUpScreen({ setToken, navigation }) {
           setConfirmPassword(text);
         }} />
         {/* Affichage du message d'erreur */}
-      {errorMessage && <Text>{errorMessage}</Text>}
+      {errorMessage && <View style={styles.error}><Text style={styles.red}>{errorMessage}</Text></View>}
       </View> 
       </KeyboardAwareScrollView> 
 
@@ -106,12 +105,12 @@ const styles = StyleSheet.create({
   logo:{
     width: 90,
     height: 90,
-    marginTop: 15,
-    marginBottom: 15,
+    marginTop: 30,
+    marginBottom: 30,
   },
   align:{
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 25,
   },
   sign:{
     fontSize: 25,
@@ -131,13 +130,10 @@ const styles = StyleSheet.create({
   },
   area:{
     borderTopWidth: 1,
-    borderTopColor: '#EB5A62', 
     borderBottomWidth: 1,
-    borderBottomColor: '#EB5A62',
     borderLeftWidth: 1,
-    borderLeftColor: '#EB5A62',
     borderRightWidth: 1,
-    borderRightColor: '#EB5A62',
+    borderColor: '#EB5A62',
     marginBottom: 30,
     paddingBottom: 5,
     height: 80, 
@@ -153,7 +149,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 2,
     borderColor: '#EB5A62',
-    marginBottom: 10,
+    marginBottom: 15,
     width: 200,
     fontWeight: "bold",
     padding: 5,
@@ -167,5 +163,12 @@ const styles = StyleSheet.create({
     color: '#717171',
     fontWeight: "bold",
     marginBottom: 12,
+  },
+  error:{
+    alignItems: "center",
+  },
+  red:{
+    color: '#EB5A62',
+    fontWeight: "bold",
   },
 });

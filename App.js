@@ -57,7 +57,7 @@ export default function App() {
             <Stack.Screen name="SignIn" options={{
                 headerShown: false,
               }}>
-              {() => <SignInScreen setToken={setToken} />}
+              {(props) => <SignInScreen {...props} setToken={setToken} />}
             </Stack.Screen>
             <Stack.Screen name="SignUp" options={{
                 headerShown: false,
