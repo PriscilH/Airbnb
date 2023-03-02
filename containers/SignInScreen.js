@@ -21,9 +21,11 @@ export default function SignInScreen({ setToken, navigation }) {
             password,
           }
         );
-        
+        // const token = response.data.token;
+        //   setToken(token);
         console.log("response>>", data);
           alert("Connexion réussie");
+          
       } catch (error) {
         setErrorMessage("Your email or password doesn't exist!");
       }

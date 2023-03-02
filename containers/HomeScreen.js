@@ -1,8 +1,7 @@
-import { useNavigation } from "@react-navigation/core";
 import { Button, Text, View } from "react-native";
 
-export default function HomeScreen() {
-  const navigation = useNavigation();
+export default function HomeScreen( setToken, navigation) {
+  
   return (
     <View>
       <Text>Welcome home!</Text>

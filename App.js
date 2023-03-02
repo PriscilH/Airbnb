@@ -95,7 +95,7 @@ export default function App() {
                           headerTitleStyle: { color: "white" },
                         }}
                       >
-                        {() => <HomeScreen />}
+                        {/* {(props) => <HomeScreen {...props} setToken={setToken}/>} */}
                       </Stack.Screen>
 
                       <Stack.Screen
