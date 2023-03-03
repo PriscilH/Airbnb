@@ -1,8 +1,8 @@
-import { Button, View, Image, StyleSheet, ScrollView, FlatList, Text} from "react-native";
+import { View, Image, StyleSheet, FlatList, Text, ActivityIndicator} from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Logo from "../assets/airbnb-icon.png";
+// import Logo from "../assets/airbnb-icon.png";
 
 export default function HomeScreen({}) {
   const [data, setData] = useState(null);
@@ -25,33 +25,31 @@ export default function HomeScreen({}) {
     fetchData();
   }, []);
 
-  return (
-    <ScrollView style={styles.container}>
-    <View style={styles.align}>
-      <Image source={Logo} style={styles.logo} />
-    </View>
-
-    <View>
-      <FlatList data={data}
+  return isLoading ? (
+   <ActivityIndicator size="large" color="purple" style={{ marginTop: 100 }} />
+  ) : (
+    <FlatList style={styles.container}
+          data={data}
           keyExtractor={(item) => String(item._id)}
           renderItem={({ item }) => {
-            <View>
-              <Text>{item._id}</Text>
+            <>
+              {/* <Text>{item._id}</Text> */}
               <Image style={{ height: 200 }}
             source={{ uri: item.photos[0].url }}/>;
-            </View>
+            </>
           }}/> 
-    </View>
-
-
-    <Button
-        title="Go to Profile"
-        onPress={() => {
-          navigation.navigate("Profile", { userId: 123 });
-        }}
-      />
-    </ScrollView>
   );
+      
+    
+
+
+    // <Button
+    //     title="Go to Profile"
+    //     onPress={() => {
+    //       navigation.navigate("Profile", { userId: 123 });
+    //     }}
+    //   />
+  
 }
 
 const styles = StyleSheet.create({
