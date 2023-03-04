@@ -1,11 +1,13 @@
-import { View, Image, StyleSheet, FlatList, Text, ActivityIndicator} from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import { View, StyleSheet, Image, FlatList, Text, ActivityIndicator, ImageBackground, TouchableOpacity} from "react-native";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
-// import Logo from "../assets/airbnb-icon.png";
+
+import { functionStars } from "../utils/functionStars";
 
 export default function HomeScreen({}) {
-  const [data, setData] = useState(null);
+  const [rooms, setRooms] = useState([]);
   const [isLoading, setIsloading] = useState(true);
 
   const navigation = useNavigation();
@@ -13,14 +15,15 @@ export default function HomeScreen({}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
+        const {data} = await axios.get(
           `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms`
         );
-        setData(response.data);
-        setIsloading(false);
+        // console.log("data>>>", data);
+        setRooms(data);
       } catch (error) {
-        console.log(error);
+        console.log(error.response);
       }
+      setIsloading(false);
     };
     fetchData();
   }, []);
@@ -28,28 +31,43 @@ export default function HomeScreen({}) {
   return isLoading ? (
    <ActivityIndicator size="large" color="purple" style={{ marginTop: 100 }} />
   ) : (
-    <FlatList style={styles.container}
-          data={data}
+    // style={styles.container}
+    <View>
+      <FlatList 
+          data={rooms}
           keyExtractor={(item) => String(item._id)}
           renderItem={({ item }) => {
-            <>
-              {/* <Text>{item._id}</Text> */}
-              <Image style={{ height: 200 }}
-            source={{ uri: item.photos[0].url }}/>;
-            </>
-          }}/> 
+            return (
+              <TouchableOpacity
+              onPress={() => navigation.navigate("Room", { id: item._id })}
+            >
+              <ImageBackground source={{ uri: item.photos[0].url }} 
+              style={styles.imageBg}
+               >
+                <View style={styles.priceBloc}>
+                  <Text style={styles.price}>{item.price} €</Text>
+                </View>
+              </ImageBackground>
+            
+              <View style={styles.descBloc}>
+                <View>
+                  <Text>{item.title}</Text>
+                  {/* La fonction displayStars vient du fichier du même nom qui se trouve dans le dossier "utils" */}
+                  <Text>{functionStars(item.ratingValue)}</Text>
+                  <Text>{item.reviews} reviews</Text>
+                </View>
+
+                <Image
+                  source={{ uri: item.user.account.photo.url }}
+                  style={styles.avatar}
+                 /> 
+               </View> 
+             </TouchableOpacity>
   );
-      
-    
-
-
-    // <Button
-    //     title="Go to Profile"
-    //     onPress={() => {
-    //       navigation.navigate("Profile", { userId: 123 });
-    //     }}
-    //   />
-  
+}}
+/>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

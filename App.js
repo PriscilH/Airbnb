@@ -100,12 +100,9 @@ export default function App() {
                       </Stack.Screen>
 
                       <Stack.Screen
-                        name="Profile"
-                        options={{
-                          title: "User Profile",
-                        }}
+                        name="Room"
                       >
-                        {() => <ProfileScreen />}
+                        {() => <RoomScreen />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
