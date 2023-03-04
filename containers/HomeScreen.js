@@ -29,9 +29,8 @@ export default function HomeScreen({}) {
   }, []);
 
   return isLoading ? (
-   <ActivityIndicator size="large" color="purple" style={{ marginTop: 100 }} />
+   <ActivityIndicator size="large" color="#EB5A62" style={{ marginTop: 100 }} />
   ) : (
-    // style={styles.container}
     <View>
       <FlatList 
           data={rooms}
@@ -44,15 +43,15 @@ export default function HomeScreen({}) {
               <ImageBackground source={{ uri: item.photos[0].url }} 
               style={styles.imageBg}
                >
-                <View style={styles.priceBloc}>
+                <View style={styles.priceBlock}>
                   <Text style={styles.price}>{item.price} €</Text>
                 </View>
               </ImageBackground>
             
-              <View style={styles.descBloc}>
+              <View style={styles.descBlock}>
                 <View>
-                  <Text>{item.title}</Text>
-                  {/* La fonction displayStars vient du fichier du même nom qui se trouve dans le dossier "utils" */}
+                  <Text numberOfLines={1}>{item.title}</Text>
+                  {/* La fonction functionStars vient du fichier du même nom qui se trouve dans le dossier "utils" */}
                   <Text>{functionStars(item.ratingValue)}</Text>
                   <Text>{item.reviews} reviews</Text>
                 </View>
@@ -65,26 +64,44 @@ export default function HomeScreen({}) {
              </TouchableOpacity>
   );
 }}
+style={styles.flatlist}
 />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container:{
-    backgroundColor: 'white',
-    flex: 1,
+  flatlist: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: "white",
   },
-  logo:{
-    width: 40,
+  imageBg: {
+    width: "100%",
+    height: 230,
+    justifyContent: "flex-end",
+  },
+  priceBlock: {
+    backgroundColor: "black",
     height: 40,
-    marginTop: 50,
-    marginBottom: 5,
-  },
-  align:{
+    width: 70,
+    justifyContent: "center",
     alignItems: "center",
-    marginBottom: 90, 
-    borderBottomWidth: 0.5,
-    borderColor: 'lightgrey'
+    marginBottom: 20,
+  },
+  price: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  avatar: {
+    height: 70,
+    width: 70,
+    borderRadius: 50,
+  },
+  descBlock: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 15,
   },
 });
