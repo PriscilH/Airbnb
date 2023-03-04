@@ -50,16 +50,24 @@ export default function HomeScreen({}) {
             
               <View style={styles.descBlock}>
                 <View>
-                  <Text numberOfLines={1}>{item.title}</Text>
-                  {/* La fonction functionStars vient du fichier du même nom qui se trouve dans le dossier "utils" */}
-                  <Text>{functionStars(item.ratingValue)}</Text>
-                  <Text>{item.reviews} reviews</Text>
-                </View>
-
-                <Image
+                  <View style={styles.titleBlock}>
+                    <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
+                  <View>
+                    <Image
                   source={{ uri: item.user.account.photo.url }}
                   style={styles.avatar}
                  /> 
+                  </View>
+                  </View>
+                  
+
+                  <View style={styles.rate}>
+                   {/* La fonction functionStars vient du fichier du même nom qui se trouve dans le dossier "utils" */}
+                  <Text>{functionStars(item.ratingValue)}</Text>
+                   <Text style={styles.reviews}>{item.reviews} reviews</Text>
+                  </View>
+                </View>
+                <View style={styles.border}></View>
                </View> 
              </TouchableOpacity>
   );
@@ -98,10 +106,31 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     borderRadius: 50,
+    marginLeft: 5,
   },
   descBlock: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     marginVertical: 15,
+  },
+  border:{
+    borderBottomColor: '#BBBBBB',
+    borderBottomWidth: 1,
+    opacity: 0.3,
+  },
+  title: {
+    fontSize: 21,
+  },
+  titleBlock: {
+    flexDirection: "row",
+    width: 280,
+  },
+  rate:{
+    flexDirection: "row",
+    marginTop: -30,
+    marginBottom: 20,
+  },
+  reviews: {
+    marginTop: 4,
+    marginLeft: 5,
+    color: '#BBBBBB',
   },
 });
