@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/core";
-import { View, StyleSheet, Image, FlatList, Text, ActivityIndicator, ImageBackground, TouchableOpacity} from "react-native";
-
-import { useState, useEffect } from "react";
+import { View, StyleSheet, Image, FlatList, Text, animation, Button, ImageBackground, TouchableOpacity} from "react-native";
+import LottieView from 'lottie-react-native';
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import { functionStars } from "../utils/functionStars";
@@ -13,6 +13,9 @@ export default function HomeScreen({}) {
   const navigation = useNavigation();
 
   useEffect(() => {
+    setTimeout(() => {
+      setIsloading(false);
+    }, 5000);
     const fetchData = async () => {
       try {
         const {data} = await axios.get(
@@ -23,13 +26,35 @@ export default function HomeScreen({}) {
       } catch (error) {
         console.log(error.response);
       }
-      setIsloading(false);
+      // setIsloading(false);
     };
     fetchData();
   }, []);
 
   return isLoading ? (
-   <ActivityIndicator size="large" color="#EB5A62" style={{ marginTop: 100 }} />
+  //  <ActivityIndicator size="large" color="#EB5A62" style={{ marginTop: 100 }} />
+  <View style={styles.animationContainer}>
+      <LottieView
+        autoPlay
+        ref={animation}
+        style={{
+          width: 200,
+          height: 200,
+          backgroundColor: '#eee',
+        }}
+        // Find more Lottie files at https://lottiefiles.com/featured
+        source={require('../assets/airbnb-animation.json')}
+      />
+      {/* <View style={styles.buttonContainer}>
+        <Button
+          title="Restart Animation"
+          onPress={() => {
+            animation.current?.reset();
+            animation.current?.play();
+          }}
+        />
+      </View> */}
+    </View>
   ) : (
     <View>
       <FlatList 
@@ -132,4 +157,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     color: '#BBBBBB',
   },
+  animationContainer: {
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  // buttonContainer: {
+  //   paddingTop: 20,
+  // },
 });
