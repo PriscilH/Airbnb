@@ -103,13 +103,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   avatar: {
-    height: 70,
-    width: 70,
+    height: 80,
+    width: 80,
     borderRadius: 50,
-    marginLeft: 5,
   },
   descBlock: {
-    marginVertical: 15,
+    marginVertical: 20,
   },
   border:{
     borderBottomColor: '#BBBBBB',
@@ -117,11 +116,11 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
   title: {
-    fontSize: 21,
+    fontSize: 19,
   },
   titleBlock: {
     flexDirection: "row",
-    width: 280,
+    width: 287,
   },
   rate:{
     flexDirection: "row",
