@@ -2,12 +2,14 @@ import { Text, TextInput, View, Image, TouchableOpacity, StyleSheet, ScrollView 
 import Logo from "../assets/airbnb-icon.png";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useState } from "react";
+import { FontAwesome } from '@expo/vector-icons';
 import axios from "axios";
 
 export default function SignInScreen({ setToken, navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(true);
 
 
   const handleSubmit = async () => {
@@ -53,12 +55,23 @@ export default function SignInScreen({ setToken, navigation }) {
           setEmail(text);
         }} /></View>
         {/* <Text>Password: </Text> */}
-        <View style={styles.input}><TextInput placeholder="Password"  secureTextEntry={true}
+        <View style={styles.input}><TextInput placeholder="Password" 
         onChangeText={(text) => {
           setErrorMessage("");
           setPassword(text);
-        }} />
-        
+        }} 
+        secureTextEntry={passwordVisible ? true : false}
+        />
+        <TouchableOpacity
+                style={styles.icon}
+                onPress={() => setPasswordVisible(!passwordVisible)}
+              >
+                {passwordVisible ? (
+                  <FontAwesome name="eye-slash" size={24} color="#EB5A62" />
+                ) : (
+                  <FontAwesome name="eye" size={24} color="#EB5A62" />
+                  )}
+        </TouchableOpacity>    
         </View>
         </View>
         {/* Affichage du message d'erreur */}
@@ -121,12 +134,19 @@ const styles = StyleSheet.create({
     borderBottomColor: '#EB5A62',
     marginBottom: 30,
     paddingBottom: 5,
+    flexDirection: "row",
+    position: "relative",
+    width: 300,
+  },
+  icon: {
+    position: "absolute",
+    marginLeft: 270,
+    marginTop: -10,
   },
   button:{
     backgroundColor: 'white',
     color: '#717171',
     fontWeight: "bold",
-    
   },
   border:{
     alignItems: "center",
