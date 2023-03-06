@@ -56,6 +56,7 @@ export default function RoomScreen({ route }) {
       <ImageBackground
         source={{ uri: photo.url }}
         style={styles.imageBg}
+        key={photo.picture_id}
       >
         <View style={styles.priceBlock}>
           <Text style={styles.price}>{room.price} €</Text>
