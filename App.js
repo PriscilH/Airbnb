@@ -103,9 +103,8 @@ export default function App() {
                       </Stack.Screen>
 
                       <Stack.Screen
-                        name="Room"
-                      >
-                        {() => <RoomScreen />}
+                        name="Room" >
+                        {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
