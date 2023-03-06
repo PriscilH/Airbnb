@@ -12,6 +12,7 @@ import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
 
 import LogoInHeader from "./components/LogoInHeader";
+import ArrowBack from "./components/ArrowBack";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -103,7 +104,10 @@ export default function App() {
                       </Stack.Screen>
 
                       <Stack.Screen
-                        name="Room" >
+                        name="Room" options={{ 
+                          headerBackTitleVisible: false,
+                          headerLeft: () => <ArrowBack />,
+                           }}>
                         {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
