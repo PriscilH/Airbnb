@@ -7,12 +7,15 @@ import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
+  ScrollView
 } from "react-native";
 import { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { functionStars } from "../utils/functionStars";
 import Swiper from "react-native-swiper";
+// import * as Location from "expo-location";
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 
 export default function RoomScreen({ route }) {
   const { id } = route.params;
@@ -43,7 +46,7 @@ export default function RoomScreen({ route }) {
     <ActivityIndicator size="large" />
   ) : (
     <>
-    <View style={styles.container}>
+      <View tyle={styles.container}>
       <View style={styles.carrousel}>
       <Swiper
           dotStyle={styles.dot}
@@ -112,9 +115,32 @@ export default function RoomScreen({ route }) {
 
         </View>
         </View>
-        
-  </View>
-      </>
+        <MapView
+        provider={PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: room.location[1],
+          longitude: room.location[0],
+          latitudeDelta: 0.09,
+          longitudeDelta: 0.09,
+        }}
+        style={{ width: "100%", height: "30%" }}
+      >
+        <Marker
+          coordinate={{
+            latitude: room.location[1],
+            longitude: room.location[0],
+          }}
+        >
+          <Callout>
+            <Text>{room.title}</Text>
+            <Text>{room.price}</Text>
+          </Callout>
+        </Marker>
+      </MapView>
+      </View>
+  </>
+ 
+    
   );
 }
 
@@ -160,7 +186,7 @@ const styles = StyleSheet.create({
   rate:{
     flexDirection: "row",
     marginTop: -30,
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   reviews: {
     marginTop: 4,
