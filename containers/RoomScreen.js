@@ -6,8 +6,10 @@ import {
   Image,
   ActivityIndicator,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
+import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { functionStars } from "../utils/functionStars";
 
@@ -15,6 +17,7 @@ export default function RoomScreen({ route }) {
   const { id } = route.params;
   const [room, setRoom] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [showText, setShowText] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,7 +69,31 @@ export default function RoomScreen({ route }) {
           <Text>{functionStars(room.ratingValue)}</Text>
           <Text style={styles.reviews}>{room.reviews} reviews</Text>
           </View>
-          <View><Text>{room.description}</Text></View>
+
+          {showText === true ? (
+            <Text style={styles.offerDescription}>{room.description}</Text>
+            ) : (
+            <Text 
+            style={styles.offerDescription}
+            numberOfLines={3}>{room.description}
+            </Text>
+             )}
+
+            <TouchableOpacity onPress={() => {
+          setShowText(!showText);
+        }}>
+
+            {showText ? (
+            <Text style={{ color: "grey" }}>
+              Show less <AntDesign name="caretup" size={10} color="grey" />
+            </Text>
+          ) : (
+            <Text style={{ color: "grey" }}>
+              Show more <AntDesign name="caretdown" size={10} color="grey" />
+            </Text>
+          )}
+          </TouchableOpacity>
+
         </View>
         </View>
         
@@ -124,5 +151,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginVertical: 20,
+  },
+  offerDescription: {
+    fontSize: 14,
+    marginTop: 10,
   },
 });
