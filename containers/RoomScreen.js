@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { functionStars } from "../utils/functionStars";
+import Swiper from "react-native-swiper";
 
 export default function RoomScreen({ route }) {
   const { id } = route.params;
@@ -41,15 +42,29 @@ export default function RoomScreen({ route }) {
   return isLoading ? (
     <ActivityIndicator size="large" />
   ) : (
+    <>
     <View style={styles.container}>
+      <View style={styles.carrousel}>
+      <Swiper
+          dotStyle={styles.dot}
+          dotColor="#808080"
+          activeDotStyle={styles.dot}
+          activeDotColor="white"
+        >
+          {room.photos.map((photo) => {
+            return (
       <ImageBackground
-        source={{ uri: room.photos[0].url }}
+        source={{ uri: photo.url }}
         style={styles.imageBg}
       >
         <View style={styles.priceBlock}>
           <Text style={styles.price}>{room.price} €</Text>
         </View>
       </ImageBackground>
+      );
+    })}
+  </Swiper>
+  </View>
 
       <View style={styles.descBlock}>
         <View>
@@ -97,14 +112,18 @@ export default function RoomScreen({ route }) {
         </View>
         </View>
         
-      </View>
+  </View>
+      </>
   );
 }
 
 const styles = StyleSheet.create({
+  carrousel: {
+    width: "100%",
+    height: "38%",
+  },
   container:{
     height: "100%",
-    paddingVertical: 10,
     backgroundColor: "white",
   },
   imageBg: {
@@ -112,13 +131,18 @@ const styles = StyleSheet.create({
     height: 230,
     justifyContent: "flex-end",
   },
+  dot: {
+    width: 12,
+    height: 12,
+    borderRadius: 50,
+  },
   priceBlock: {
     backgroundColor: "black",
     height: 40,
     width: 70,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 30,
   },
   price: {
     color: "white",
