@@ -133,7 +133,7 @@ export default function RoomScreen({ route }) {
         >
           <Callout>
             <Text>{room.title}</Text>
-            <Text>{room.price}</Text>
+            <Text>{room.price}€</Text>
           </Callout>
         </Marker>
       </MapView>
