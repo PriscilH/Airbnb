@@ -10,6 +10,7 @@ import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 // import ProfileScreen from "./containers/ProfileScreen";
 import SettingsScreen from "./containers/SettingsScreen";
+import AroundMeScreen from "./containers/AroundMeScreen";
 import SplashScreen from "./containers/SplashScreen";
 
 import LogoInHeader from "./components/LogoInHeader";
@@ -109,6 +110,33 @@ export default function App() {
                           headerBackTitleVisible: false,
                           headerLeft: () => <ArrowBack />,
                            }}>
+                        {(props) => <RoomScreen {...props} />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+                {/* ----------------------------------------- */}
+                <Tab.Screen
+                  name="TabAroundMe"
+                  options={{
+                    tabBarLabel: "Around Me",
+                    tabBarIcon: ({ color, size }) => (
+                      <Ionicons name={"ios-home"} size={size} color={color} />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator
+                      screenOptions={{
+                        // Personnalisation du header pour tous les écrans de ce Navigator ------------------
+                        headerTitle: () => <LogoInHeader />,
+                        headerTitleAlign: "center",
+                      }}
+                    >
+                      <Stack.Screen name="AroundMe">
+                        {(props) => <AroundMeScreen {...props} />}
+                      </Stack.Screen>
+                      <Stack.Screen name="Room">
                         {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
