@@ -6,15 +6,13 @@ import {
   Image,
   ActivityIndicator,
   StyleSheet,
-  TouchableOpacity,
-  ScrollView
+  TouchableOpacity
 } from "react-native";
 import { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import { functionStars } from "../utils/functionStars";
 import Swiper from "react-native-swiper";
-// import * as Location from "expo-location";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 
 export default function RoomScreen({ route }) {
