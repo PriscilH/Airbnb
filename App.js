@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { Foundation } from '@expo/vector-icons';
+import { EvilIcons } from '@expo/vector-icons';
 import HomeScreen from "./containers/HomeScreen";
 import RoomScreen from "./containers/RoomScreen";
 import SignInScreen from "./containers/SignInScreen";
@@ -148,11 +149,7 @@ export default function App() {
                   options={{
                     tabBarLabel: "My Profile",
                     tabBarIcon: ({ color, size }) => (
-                      <Ionicons
-                        name={"ios-options"}
-                        size={size}
-                        color={color}
-                      />
+                      <EvilIcons name="user" size={size} color={color} />
                     ),
                   }}
                 >
