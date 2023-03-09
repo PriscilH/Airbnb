@@ -1,8 +1,10 @@
-import { Button, TextInput, View, StyleSheet } from "react-native";
+import { TextInput, Text, View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
 export default function ProfileScreen({ setToken, id, userToken }) {
   const [email, setEmail] = useState("");
@@ -10,6 +12,59 @@ export default function ProfileScreen({ setToken, id, userToken }) {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [picture, setPicture] = useState(null);
+
+  const navigation = useNavigation();
+
+  const accessLibrary = async () => {
+    try {
+      // Demander l'autorisation d'accéder à la gallerie
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (status == "granted") {
+        // Ouvrir la gallerie
+        const result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true, // indispensable pour simulateur Iphone
+          aspect: [4, 3],
+        });
+        console.log("result>>>", result);
+
+        if (!result.canceled) {
+          setPicture(result.assets[0].uri);
+        } else {
+          // Si aucune photo sélectionnée
+          alert("Selection photo annulée");
+        }
+      } else {
+        alert("Accès gallerie refusé");
+      }
+    } catch (error) {
+      console.log("catch>>>", error);
+    }
+  };
+
+  const accessCamera = async () => {
+    try {
+      // Demander l'autorisation d'accéder à l'appareil photo
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+      if (status == "granted") {
+        // Ouvrir l'appareil photo
+        const result = await ImagePicker.launchCameraAsync({});
+        console.log("result>>>", result);
+        if (!result.canceled) {
+          setPicture(result.assets[0].uri);
+        } else {
+          // Si aucune photo prise
+          alert("Prise de photo annulée");
+        }
+      } else {
+        alert("Permission caméra refusée");
+      }
+    } catch (error) {
+      console.log("catch camera>>>", error);
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -38,16 +93,15 @@ export default function ProfileScreen({ setToken, id, userToken }) {
     }}
 
   return (
-    <View>
-      <KeyboardAwareScrollView>
+    <ScrollView style={styles.container}>
+      <KeyboardAwareScrollView >
       <View style={styles.block}>
         <TextInput style={styles.input} placeholder="Email" onChangeText={(text) => {
-          // réinitialisation du message d'erreur dès que l'utilisateur change la valeur de l'input
-          setErrorMessage("");
           setEmail(text);
         }} />
+        
+
         <TextInput style={styles.input} placeholder="Username" onChangeText={(text) => {
-          setErrorMessage("");
           setUsername(text);
         }}  />
         <TextInput style={styles.area} multiline = {true} numberOfLines = {4}
@@ -55,19 +109,42 @@ export default function ProfileScreen({ setToken, id, userToken }) {
           setDescription(text);
         }}/>
       </View>
-      </KeyboardAwareScrollView> 
+      
 
-      <Button
+      <TouchableOpacity style={styles.align2}>
+        <View style={styles.border}>
+        <Text style={styles.button}
+          // onPress={handleSubmit}
+          >Update</Text>
+        </View> 
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.align2}>
+        <View style={styles.border}>
+        <Text style={styles.button}
+          onPress={() => {
+            setToken(null);
+          }}
+          >Log Out</Text>
+        </View> 
+      </TouchableOpacity>
+      {/* <Button
         title="Log Out"
         onPress={() => {
           setToken(null);
         }}
-      />
-    </View>
+      /> */}
+      </KeyboardAwareScrollView> 
+      </ScrollView>
+    
   );
 }
 
 const styles = StyleSheet.create({
+  container:{
+    backgroundColor: 'white',
+    flex: 1,
+  },
   block:{
     marginTop: 250,
     marginLeft: 35,
@@ -90,5 +167,25 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     height: 80, 
     textAlignVertical: 'top',
+  },
+  border:{
+    alignItems: "center",
+    height: 50,
+    borderWidth: 2,
+    borderColor: '#EB5A62',
+    marginBottom: 15,
+    width: 200,
+    fontWeight: "bold",
+    padding: 5,
+    justifyContent: "center",
+    borderRadius: 50,
+  },
+  align2:{
+    alignItems: "center",
+  },
+  button:{
+    backgroundColor: 'white',
+    color: '#717171',
+    fontWeight: "bold",
   },
 })
