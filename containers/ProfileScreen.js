@@ -1,5 +1,7 @@
-import { Button, Text, View } from "react-native";
+import { Button, TextInput, View, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 
 export default function ProfileScreen({ setToken, id, userToken }) {
@@ -37,7 +39,23 @@ export default function ProfileScreen({ setToken, id, userToken }) {
 
   return (
     <View>
-      <Text>Hello Settings</Text>
+      <KeyboardAwareScrollView>
+      <View style={styles.block}>
+        <TextInput style={styles.input} placeholder="Email" onChangeText={(text) => {
+          // réinitialisation du message d'erreur dès que l'utilisateur change la valeur de l'input
+          setErrorMessage("");
+          setEmail(text);
+        }} />
+        <TextInput style={styles.input} placeholder="Username" onChangeText={(text) => {
+          setErrorMessage("");
+          setUsername(text);
+        }}  />
+        <TextInput style={styles.area} multiline = {true} numberOfLines = {4}
+        placeholder="Describe yourself in a few words..." onChangeText={(text) => {
+          setDescription(text);
+        }}/>
+      </View>
+      </KeyboardAwareScrollView> 
 
       <Button
         title="Log Out"
@@ -48,3 +66,29 @@ export default function ProfileScreen({ setToken, id, userToken }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  block:{
+    marginTop: 250,
+    marginLeft: 35,
+    marginRight: 35,
+    marginBottom: 30,
+  },
+  input:{
+    borderBottomWidth: 1,
+    borderBottomColor: '#EB5A62',
+    marginBottom: 30,
+    paddingBottom: 5,
+  },
+  area:{
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#EB5A62',
+    marginBottom: 30,
+    paddingBottom: 5,
+    height: 80, 
+    textAlignVertical: 'top',
+  },
+})

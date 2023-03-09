@@ -157,7 +157,11 @@ export default function App() {
                   }}
                 >
                   {() => (
-                    <Stack.Navigator>
+                    <Stack.Navigator screenOptions={{
+                      // Personnalisation du header pour tous les écrans de ce Navigator ------------------
+                      headerTitle: () => <LogoInHeader />,
+                      headerTitleAlign: "center",
+                    }}>
                       <Stack.Screen
                         name="Profile"
                         options={{
