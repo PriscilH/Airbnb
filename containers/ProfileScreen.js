@@ -95,6 +95,38 @@ export default function ProfileScreen({ setToken, id, userToken }) {
   return (
     <ScrollView style={styles.container}>
       <KeyboardAwareScrollView >
+
+      <View style={styles.firstPart}>
+      <View style={styles.avatarBloc}>
+          {picture ? (
+            <Image
+              source={{
+                uri: picture,
+              }}
+              // resizeMode="contain"
+              style={styles.picture}
+            />
+          ) : (
+            <Text>No avatar</Text>
+          )}
+        </View>
+
+        <View>
+          <MaterialIcons
+            name="add-a-photo"
+            size={24}
+            color="black"
+            onPress={accessCamera}
+          />
+          <MaterialIcons
+            name="add-photo-alternate"
+            size={24}
+            color="black"
+            onPress={accessLibrary}
+          />
+        </View>
+        </View>
+
       <View style={styles.block}>
         <TextInput style={styles.input} placeholder="Email" onChangeText={(text) => {
           setEmail(text);
@@ -146,10 +178,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   block:{
-    marginTop: 250,
+    marginTop: 50,
     marginLeft: 35,
     marginRight: 35,
     marginBottom: 30,
+  },
+  avatarBloc: {
+    borderWidth: 1,
+    width: 150,
+    height: 150,
+    borderRadius: 150,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 30,
+    marginTop: 20,
+    marginRight: 10,
+    borderColor: '#EB5A62',
+  },
+  firstPart: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatar: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 150,
+    borderWidth: 1,
   },
   input:{
     borderBottomWidth: 1,
