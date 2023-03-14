@@ -1,4 +1,4 @@
-import { TextInput, Text, View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { TextInput, Text, View, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
 import { useState, useEffect } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
@@ -128,16 +128,16 @@ export default function ProfileScreen({ setToken, id, userToken }) {
         </View>
 
       <View style={styles.block}>
-        <TextInput style={styles.input} placeholder="Email" onChangeText={(text) => {
+        <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={(text) => {
           setEmail(text);
         }} />
         
 
-        <TextInput style={styles.input} placeholder="Username" onChangeText={(text) => {
+        <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={(text) => {
           setUsername(text);
         }}  />
         <TextInput style={styles.area} multiline = {true} numberOfLines = {4}
-        placeholder="Describe yourself in a few words..." onChangeText={(text) => {
+        placeholder="Describe yourself in a few words..." value={description} onChangeText={(text) => {
           setDescription(text);
         }}/>
       </View>
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  avatar: {
+  picture: {
     width: "100%",
     height: "100%",
     borderRadius: 150,
