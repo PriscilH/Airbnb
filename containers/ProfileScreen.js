@@ -1,4 +1,4 @@
-import { TextInput, Text, View, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { TextInput, Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, ActivityIndicator } from "react-native";
 import { useState, useEffect } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
@@ -6,65 +6,17 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
-export default function ProfileScreen({ setToken, id, userToken }) {
+export default function ProfileScreen({ setToken, userId, userToken }) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [picture, setPicture] = useState(null);
+  const [pictureModified, setPictureModified] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [inputModified, setInputModified] = useState(false);
 
   const navigation = useNavigation();
-
-  const accessLibrary = async () => {
-    try {
-      // Demander l'autorisation d'accéder à la gallerie
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (status == "granted") {
-        // Ouvrir la gallerie
-        const result = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: true, // indispensable pour simulateur Iphone
-          aspect: [4, 3],
-        });
-        console.log("result>>>", result);
-
-        if (!result.canceled) {
-          setPicture(result.assets[0].uri);
-        } else {
-          // Si aucune photo sélectionnée
-          alert("Selection photo annulée");
-        }
-      } else {
-        alert("Accès gallerie refusé");
-      }
-    } catch (error) {
-      console.log("catch>>>", error);
-    }
-  };
-
-  const accessCamera = async () => {
-    try {
-      // Demander l'autorisation d'accéder à l'appareil photo
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-
-      if (status == "granted") {
-        // Ouvrir l'appareil photo
-        const result = await ImagePicker.launchCameraAsync({});
-        console.log("result>>>", result);
-        if (!result.canceled) {
-          setPicture(result.assets[0].uri);
-        } else {
-          // Si aucune photo prise
-          alert("Prise de photo annulée");
-        }
-      } else {
-        alert("Permission caméra refusée");
-      }
-    } catch (error) {
-      console.log("catch camera>>>", error);
-    }
-  };
 
   useEffect(() => {
     fetchData();
@@ -73,7 +25,7 @@ export default function ProfileScreen({ setToken, id, userToken }) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/${id}`,
+        `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/${userId}`,
         {
           headers: {
             Authorization: "Bearer " + userToken,
@@ -92,7 +44,133 @@ export default function ProfileScreen({ setToken, id, userToken }) {
       console.log(error);
     }}
 
-  return (
+  const accessLibrary = async () => {
+    try {
+      // Demander l'autorisation d'accéder à la gallerie
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (status == "granted") {
+        // Ouvrir la gallerie
+        const result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true, // indispensable pour simulateur Iphone
+          aspect: [4, 3],
+        });
+        console.log("result>>>", result);
+
+        if (!result.canceled) {
+          setPicture(result.assets[0].uri);
+          setPictureModified(true)
+        } else {
+          // Si aucune photo sélectionnée
+          alert("Selection photo annulée");
+        }
+      } else {
+        alert("Accès gallerie refusé");
+      }
+    } catch (error) {
+      console.log("catch Library>>>", error);
+    }
+  };
+
+  const accessCamera = async () => {
+    try {
+      // Demander l'autorisation d'accéder à l'appareil photo
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+      if (status == "granted") {
+        // Ouvrir l'appareil photo
+        const result = await ImagePicker.launchCameraAsync({});
+        console.log("result>>>", result);
+
+        if (!result.canceled) {
+          setPicture(result.assets[0].uri);
+          setPictureModified(true);
+        } else {
+          // Si aucune photo prise
+          alert("Prise de photo annulée");
+        }
+      } else {
+        alert("Permission caméra refusée");
+      }
+    } catch (error) {
+      console.log("catch camera>>>", error.response);
+    }
+  };
+
+  
+
+    const handleUpdate = async () => {
+      setIsUpdating(true);
+      try {
+        if (pictureModified) {
+          // console.log("avatar modifié");
+  
+          const extension = picture.split(".").pop();
+  
+          const formData = new FormData();
+          formData.append("photo", {
+            uri: picture,
+            name: `my-pic.${extension}`,
+            type: `image/${extension}`,
+          });
+  
+          // ---------A--MODIFIER--ROUTE--UPLOAD--PICTURE--AVEC-NOTRE--BACK--NGROCK----
+
+          const { data } = await axios.post(
+            "https://7ec3-2a01-cb05-8e65-df00-217e-ec90-f1f6-5fda.eu.ngrok.io/upload",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                authorization: `Bearer ${userToken}`,
+              },
+            }
+          );
+  
+          console.log("data>>>", data);
+          setPicture(data.photo.url);
+        } else {
+          console.log("avatar non modifié");
+        }
+        // ---------------------------------------
+        if (inputModified) {
+          console.log("modifié");
+  
+          const { data } = await axios.put(
+            "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/update",
+            {
+              email,
+              description,
+              username,
+            },
+            {
+              headers: {
+                authorization: `Bearer ${userToken}`,
+              },
+            }
+          );
+          console.log("data input>>", data);
+  
+          setEmail(data.email);
+          setDescription(data.description);
+          setUsername(data.username);
+  
+          if (data.photo) {
+            setPicture(data.photo.url);
+          }
+        } else {
+          console.log("no modification");
+        }
+      } catch (error) {
+        console.log("catch update>>>", error.response);
+      }
+      setIsUpdating(false);
+    };
+  
+    return isLoading ? (
+      <ActivityIndicator />
+    ) : (
     <ScrollView style={styles.container}>
       <KeyboardAwareScrollView >
 
@@ -129,16 +207,16 @@ export default function ProfileScreen({ setToken, id, userToken }) {
 
       <View style={styles.block}>
         <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={(text) => {
-          setEmail(text);
+          setEmail(text); setInputModified(true);
         }} />
         
 
         <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={(text) => {
-          setUsername(text);
+          setUsername(text); setInputModified(true);
         }}  />
         <TextInput style={styles.area} multiline = {true} numberOfLines = {4}
         placeholder="Describe yourself in a few words..." value={description} onChangeText={(text) => {
-          setDescription(text);
+          setDescription(text); setInputModified(true);
         }}/>
       </View>
       
@@ -146,7 +224,7 @@ export default function ProfileScreen({ setToken, id, userToken }) {
       <TouchableOpacity style={styles.align2}>
         <View style={styles.border}>
         <Text style={styles.button}
-          // onPress={handleSubmit}
+          onPress={handleUpdate}
           >Update</Text>
         </View> 
       </TouchableOpacity>
@@ -155,7 +233,7 @@ export default function ProfileScreen({ setToken, id, userToken }) {
         <View style={styles.border}>
         <Text style={styles.button}
           onPress={() => {
-            setToken(null);
+            setToken(null, null);
           }}
           >Log Out</Text>
         </View> 

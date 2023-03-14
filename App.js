@@ -24,17 +24,23 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
+  const [userId, setUserId] = useState(null);
 
-  const setToken = async (token) => {
-    if (token) {
+  const setToken = async (token, id) => {
+    if (token && id) {
       await AsyncStorage.setItem("userToken", token);
+      await AsyncStorage.setItem("userId", id);
       setUserToken(token);
+      setUserId(id);
     } else {
       await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userId");
       setUserToken(null);
+      setUserId(null);
     }
 
     setUserToken(token);
+    setUserId(id);
   };
 
   useEffect(() => {
@@ -42,10 +48,12 @@ export default function App() {
     const bootstrapAsync = async () => {
       // We should also handle error for production apps
       const userToken = await AsyncStorage.getItem("userToken");
+      const userId = await AsyncStorage.getItem("userId");
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
       setUserToken(userToken);
+      setUserId(userId);
 
       setIsLoading(false);
     };
@@ -165,7 +173,8 @@ export default function App() {
                           title: "Profile",
                         }}
                       >
-                        {() => <ProfileScreen setToken={setToken} />}
+                        {() => <ProfileScreen setToken={setToken} userId={userId}
+                            userToken={userToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
