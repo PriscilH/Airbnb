@@ -19,106 +19,104 @@ export default function ProfileScreen({ setToken, userId, userToken }) {
   const navigation = useNavigation();
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/${userId}`,
+          {
+            headers: {
+              authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        console.log("data>>", data);
+
+        setEmail(data.email);
+        setDescription(data.description);
+        setUsername(data.username);
+        
+        if (data.photo) {
+          console.log("ajouter la photo", data.photo.url);
+          setPicture(data.photo.url);
+        }
+      } catch (error) {
+        console.log("catch>>>", error.response);
+      }
+      setIsLoading(false);
+    };
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/${userId}`,
-        {
-          headers: {
-            Authorization: "Bearer " + userToken,
-          },
-        }
-      ); 
-      setUsername(response.data.username);
-      setEmail(response.data.email);
-      setDescription(response.data.description);
-      if (response.data.photo) {
-        setPicture(response.data.photo.url);
-      }
-
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-    }}
-
-  const accessLibrary = async () => {
-    try {
-      // Demander l'autorisation d'accéder à la gallerie
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (status == "granted") {
-        // Ouvrir la gallerie
-        const result = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: true, // indispensable pour simulateur Iphone
-          aspect: [4, 3],
-        });
-        console.log("result>>>", result);
-
-        if (!result.canceled) {
-          setPicture(result.assets[0].uri);
-          setPictureModified(true)
-        } else {
-          // Si aucune photo sélectionnée
-          alert("Selection photo annulée");
-        }
-      } else {
-        alert("Accès gallerie refusé");
-      }
-    } catch (error) {
-      console.log("catch Library>>>", error);
-    }
-  };
-
-  const accessCamera = async () => {
-    try {
-      // Demander l'autorisation d'accéder à l'appareil photo
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-
-      if (status == "granted") {
-        // Ouvrir l'appareil photo
-        const result = await ImagePicker.launchCameraAsync({});
-        console.log("result>>>", result);
-
-        if (!result.canceled) {
-          setPicture(result.assets[0].uri);
-          setPictureModified(true);
-        } else {
-          // Si aucune photo prise
-          alert("Prise de photo annulée");
-        }
-      } else {
-        alert("Permission caméra refusée");
-      }
-    } catch (error) {
-      console.log("catch camera>>>", error.response);
-    }
-  };
-
+    const accessLibrary = async () => {
+      try {
+        // Demander l'autorisation d'accéder à la gallerie
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
   
+        if (status == "granted") {
+          // Ouvrir la gallerie
+          const result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true, // indispensable pour simulateur Iphone
+            aspect: [4, 3],
+          });
+          console.log("result>>>", result);
+  
+          if (!result.canceled) {
+            setPicture(result.assets[0].uri);
+            setPictureModified(true)
+          } else {
+            // Si aucune photo sélectionnée
+            alert("Selection photo annulée");
+          }
+        } else {
+          alert("Accès gallerie refusé");
+        }
+      } catch (error) {
+        console.log("catch>>>", error);
+      }
+    };
+  
+    const accessCamera = async () => {
+      try {
+        // Demander l'autorisation d'accéder à l'appareil photo
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+  
+        if (status == "granted") {
+          // Ouvrir l'appareil photo
+          const result = await ImagePicker.launchCameraAsync({});
+          console.log("result>>>", result);
+          if (!result.canceled) {
+            setPicture(result.assets[0].uri);
+            setPictureModified(true)
+          } else {
+            // Si aucune photo prise
+            alert("Prise de photo annulée");
+          }
+        } else {
+          alert("Permission caméra refusée");
+        }
+      } catch (error) {
+        console.log("catch camera>>>", error);
+      }
+    };
 
     const handleUpdate = async () => {
       setIsUpdating(true);
       try {
-        if (pictureModified) {
+        if (avatarModified) {
           // console.log("avatar modifié");
   
-          const extension = picture.split(".").pop();
+          const extension = avatar.split(".").pop();
   
           const formData = new FormData();
           formData.append("photo", {
-            uri: picture,
+            uri: avatar,
             name: `my-pic.${extension}`,
             type: `image/${extension}`,
           });
   
-          // ---------A--MODIFIER--ROUTE--UPLOAD--PICTURE--AVEC-NOTRE--BACK--NGROCK----
-
-          const { data } = await axios.post(
-            "https://7ec3-2a01-cb05-8e65-df00-217e-ec90-f1f6-5fda.eu.ngrok.io/upload",
+          const { data } = await axios.put(
+            "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/upload_picture",
             formData,
             {
               headers: {
@@ -129,7 +127,7 @@ export default function ProfileScreen({ setToken, userId, userToken }) {
           );
   
           console.log("data>>>", data);
-          setPicture(data.photo.url);
+          setAvatar(data.photo.url);
         } else {
           console.log("avatar non modifié");
         }
@@ -157,7 +155,7 @@ export default function ProfileScreen({ setToken, userId, userToken }) {
           setUsername(data.username);
   
           if (data.photo) {
-            setPicture(data.photo.url);
+            setAvatar(data.photo.url);
           }
         } else {
           console.log("no modification");
@@ -168,6 +166,7 @@ export default function ProfileScreen({ setToken, userId, userToken }) {
       setIsUpdating(false);
     };
   
+    
     return isLoading ? (
       <ActivityIndicator />
     ) : (
@@ -207,16 +206,19 @@ export default function ProfileScreen({ setToken, userId, userToken }) {
 
       <View style={styles.block}>
         <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={(text) => {
-          setEmail(text); setInputModified(true);
+          setEmail(text); 
+          setInputModified(true);
         }} />
         
 
         <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={(text) => {
-          setUsername(text); setInputModified(true);
+          setUsername(text); 
+          setInputModified(true);
         }}  />
         <TextInput style={styles.area} multiline = {true} numberOfLines = {4}
         placeholder="Describe yourself in a few words..." value={description} onChangeText={(text) => {
-          setDescription(text); setInputModified(true);
+          setDescription(text); 
+          setInputModified(true);
         }}/>
       </View>
       
@@ -321,4 +323,4 @@ const styles = StyleSheet.create({
     color: '#717171',
     fontWeight: "bold",
   },
-})
+});
